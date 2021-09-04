@@ -1,0 +1,19 @@
+{
+  "bot_settings": {
+    "debug": false,
+    "timestamp": true,
+    "command_prefix": "!",
+    "welcome_message": "",
+    "part_message": "",
+    "auto_join": [""]
+  },
+  "bot_commands": {
+    "command_name": {
+      "help": "help message",
+      "callback_message": "{user} is on {channel}"
+    }
+  },
+  "keywords": {
+    "keyword_name": "{user} is on {channel}"
+  }
+}
