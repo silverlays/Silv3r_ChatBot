@@ -2,5 +2,6 @@ credentials.json
 settings.json
 .venv
 .vscode
+.gitignore
 LaunchBot.bat
 TODO
