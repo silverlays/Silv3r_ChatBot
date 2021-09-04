@@ -2,7 +2,7 @@ import asyncio, pytmi, threading
 import controllers.shared_data as shared
 
 
-TRACE_MODE = True  ### FOR DEBUG ###
+TRACE_MODE = False  ### FOR DEBUG ###
 
 
 class ClientHandler():
