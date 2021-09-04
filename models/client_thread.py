@@ -1,5 +1,5 @@
 import asyncio, pytmi, threading
-import models.shared_data as shared
+import controllers.shared_data as shared
 
 
 TRACE_MODE = True  ### FOR DEBUG ###

@@ -1,7 +1,7 @@
 import threading, os, json
 from typing import cast
-import models.shared_data as shared
-from models.bot_thread import BotThread
+import controllers.shared_data as shared
+from controllers.bot_controller import BotController
 from views.mainwindow import MainWindow
 
 
@@ -12,7 +12,7 @@ with open(CREDENTIALS_FILE, "r", encoding="utf8") as file:
   shared.credentials = cast(dict, json.load(file))
 
 shared.main_window = MainWindow()
-shared.bot_thread = BotThread()
+shared.bot_thread = BotController()
 
 main_window_thread = threading.Thread(name="MainWindow_Thread", target=shared.main_window.show)
 main_window_thread.start()

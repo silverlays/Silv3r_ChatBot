@@ -1,6 +1,6 @@
 import time
 import PySimpleGUI as sg
-import models.shared_data as shared
+import controllers.shared_data as shared
 
 
 class MainWindow():

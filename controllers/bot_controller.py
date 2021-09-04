@@ -1,13 +1,12 @@
 import asyncio, os, json, time
-import models.shared_data as shared
-from PySimpleGUI import Multiline
+import controllers.shared_data as shared
 from models.client_thread import ClientThread
 
 
 SETTINGS_FILE = os.path.join(os.getcwd(), "settings.json")
 
 
-class BotThread():
+class BotController():
   def __init__(self):
     shared.client_thread = ClientThread()
 
