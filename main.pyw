@@ -1,6 +1,6 @@
 import threading, os, json
-from typing import cast
 import controllers.shared_data as shared
+from typing import cast
 from controllers.bot_controller import BotController
 from views.mainwindow import MainWindow
 

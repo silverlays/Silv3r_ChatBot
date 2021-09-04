@@ -31,7 +31,7 @@ class MainWindow():
         shared.window_closed = True
         break
       if event == "__TIMEOUT__":
-        if shared.client_thread.tmi_client.logged: self.window['connection_status'].update("connected", text_color="green")
+        if shared.client_handler.tmi_client.logged: self.window['connection_status'].update("connected", text_color="green")
         else: self.window['connection_status'].update("disconnected", text_color="red")
       if event == "send_button" and values['input_command'] != "" and self.get_current_channel() and self.get_current_channel() != "status":
         shared.bot_controller.send_to_channel(self.get_current_channel(), values['input_command'])

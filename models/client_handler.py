@@ -5,7 +5,7 @@ import controllers.shared_data as shared
 TRACE_MODE = True  ### FOR DEBUG ###
 
 
-class ClientThread():
+class ClientHandler():
   tmi_client: pytmi.TmiClient
 
   def __init__(self):
