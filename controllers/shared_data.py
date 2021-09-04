@@ -6,7 +6,7 @@ from views.mainwindow import MainWindow
 
 
 main_window: MainWindow
-bot_thread: BotController
+bot_controller: BotController
 client_thread: ClientThread
 bot_commands_handler: BotCommands
 credentials: dict

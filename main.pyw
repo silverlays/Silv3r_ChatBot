@@ -12,7 +12,7 @@ with open(CREDENTIALS_FILE, "r", encoding="utf8") as file:
   shared.credentials = cast(dict, json.load(file))
 
 shared.main_window = MainWindow()
-shared.bot_thread = BotController()
+shared.bot_controller = BotController()
 
 main_window_thread = threading.Thread(name="MainWindow_Thread", target=shared.main_window.show)
 main_window_thread.start()

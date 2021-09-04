@@ -34,13 +34,13 @@ class MainWindow():
         if shared.client_thread.tmi_client.logged: self.window['connection_status'].update("connected", text_color="green")
         else: self.window['connection_status'].update("disconnected", text_color="red")
       if event == "send_button" and values['input_command'] != "" and self.get_current_channel() and self.get_current_channel() != "status":
-        shared.bot_thread.send_to_channel(self.get_current_channel(), values['input_command'])
+        shared.bot_controller.send_to_channel(self.get_current_channel(), values['input_command'])
         self.window['input_command'].update('')
       if event == "join_button":
         channel = sg.popup_get_text("Enter the channel to join:")
-        if channel and channel != "": shared.bot_thread.join_channel(channel)
+        if channel and channel != "": shared.bot_controller.join_channel(channel)
         elif channel == "": sg.popup_error("No channel specified!", no_titlebar=True)
-      if event == "part_button" and self.get_current_channel() and self.get_current_channel() != "status": shared.bot_thread.leave_channel(self.get_current_channel())
+      if event == "part_button" and self.get_current_channel() and self.get_current_channel() != "status": shared.bot_controller.leave_channel(self.get_current_channel())
 
   def add_to_chat(self, text, channel: str=None):
     try:
