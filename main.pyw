@@ -1,23 +1,17 @@
 import threading, os, json
-import controllers.shared_data as shared
+import controllers.bot_handler as bot_handler
+import models.bot_client_handler as bot_client_handler
+import views.mainwindow as main_window
 from typing import cast
-from controllers.bot_controller import BotController
-from views.mainwindow import MainWindow
 
 
-CREDENTIALS_FILE = os.path.join(os.getcwd(), "credentials.json")
+with open(os.path.join(os.getcwd(), "credentials.json"), "r", encoding="utf8") as file:
+  bot_client_handler.credentials = json.load(file)
 
-
-with open(CREDENTIALS_FILE, "r", encoding="utf8") as file:
-  shared.credentials = cast(dict, json.load(file))
-
-shared.main_window = MainWindow()
-shared.bot_controller = BotController()
-
-main_window_thread = threading.Thread(name="MainWindow_Thread", target=shared.main_window.show)
+main_window_thread = threading.Thread(name="MainWindow_Thread", target=main_window.show)
 main_window_thread.start()
 main_window_thread.join(1)
-bot_thread = threading.Thread(name="Bot_Thread", target=shared.bot_controller.execute_thread)
+bot_thread = threading.Thread(name="Bot_Thread", target=bot_handler.execute_thread)
 bot_thread.start()
 main_window_thread.join()
 bot_thread.join(5)

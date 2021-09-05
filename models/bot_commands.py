@@ -11,8 +11,9 @@ settings_keywords = {}
 loop = asyncio.new_event_loop()
 ### PRIVATE VARIABLES (DO NOT EDIT !) ###
 
+
 ### PRIVATE FUNCTION (DO NOT EDIT !) ###
-def _handle_command(user: str, channel: str, command: str):
+def handle_command(user: str, channel: str, command: str):
   for c in settings_commands:
     command_name = command[:command.find(" ")] if command.find(" ") != -1 else command
     args_index = command.find(" ")
@@ -32,6 +33,7 @@ def quit(*args):
   callback_message = __translate_callback_vars(settings_commands['quit']['callback_message'], user, channel)
   bot_thread.send_to_channel(channel, callback_message)
   bot_thread.leave_channel(channel)
+
 
 def help(*args):
   user, channel, command_args = args
