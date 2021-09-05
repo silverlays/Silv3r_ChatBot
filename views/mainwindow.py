@@ -2,11 +2,10 @@ import time
 import PySimpleGUI as sg
 import views.mainwindow as main_window
 import controllers.bot_handler as bot_handler
-import models.bot_client_handler as bot_client_handler
 
 
-window: sg.Window
-window_closed: bool = False
+window: sg.Window = None
+window_closed = False
 
 
 def show():
@@ -35,7 +34,7 @@ def show():
       main_window.window_closed = True
       break
     if event == "__TIMEOUT__":
-      if bot_client_handler.tmi_client.logged: window['connection_status'].update("connected", text_color="green")
+      if bot_handler.logged: window['connection_status'].update("connected", text_color="green")
       else: window['connection_status'].update("disconnected", text_color="red")
     if event == "send_button" and values['input_command'] != "" and get_current_channel() and get_current_channel() != "status":
       bot_handler.send_to_channel(get_current_channel(), values['input_command'])

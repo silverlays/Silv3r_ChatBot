@@ -2,17 +2,26 @@ import asyncio, os, json, time
 import views.mainwindow as main_window
 import models.bot_commands as bot_commands
 import models.bot_client_handler as bot_client_handler
-from asyncio.events import AbstractEventLoop
-from typing import Union
 
 
-loop: AbstractEventLoop
-settings: dict[str, dict[str, Union[type[bool], type[str], type[list], type[dict]]]]
+logged = False
+settings = {
+  "bot_settings": {
+    "debug": bool,
+    "timestamp": bool,
+    "command_prefix": str,
+    "welcome_message": str,
+    "part_message": str,
+    "auto_join": list[str]
+  },
+  "bot_commands": dict[str, type[dict]],
+  "bot_keywords": dict[str, type[str]]
+}
+_loop = asyncio.new_event_loop()
 
 
 def execute_thread():
-  global loop, settings
-  loop = asyncio.new_event_loop()
+  global settings, logged
 
   with open(os.path.join(os.getcwd(), "settings.json"), "r", encoding="utf8") as file:
     settings = json.load(file)
@@ -21,27 +30,50 @@ def execute_thread():
   bot_client_handler.login()
 
   for _ in range(100):
-    if bot_client_handler.tmi_client.logged: break
+    if bot_client_handler._tmi_client.logged: break
     else: time.sleep(0.1)
-  if not bot_client_handler.tmi_client.logged: raise ConnectionError("Cannot connect! Try to restart the bot.")
+  if not bot_client_handler._tmi_client.logged: raise ConnectionError("Cannot connect! Try to restart the bot.")
+  logged = True
   main_window.add_to_chat("Connected !")
 
   for channel in settings['bot_settings']['auto_join']:
     join_channel(channel, auto=True)
-    handle_buffer()
+    _handle_buffer()
   
   time.sleep(1) # TO BE SURE THE TABS ARE OPENED ON MAINWINDOW
   
   while True:
-    handle_buffer()
+    _handle_buffer()
     if main_window.window_closed:
-      for channel in main_window.get_channels(): loop.run_until_complete(bot_client_handler.part(channel))
+      for channel in main_window.get_channels(): _loop.run_until_complete(bot_client_handler.part(channel))
       bot_client_handler.logout()
       break
     time.sleep(0.1)
 
 
-def handle_buffer():
+def join_channel(channel: str, auto=False):
+  channel = str("#"+channel).lower() if channel[0] != "#" else channel.lower()
+  main_window.add_to_chat(f"{'[Auto-Join] ' if auto else ''}Joining {channel}...")
+  _loop.run_until_complete(bot_client_handler.send_message(channel, settings['bot_settings']['welcome_message']))
+  _loop.run_until_complete(bot_client_handler.join(channel))
+  main_window.add_tab(channel)
+  main_window.add_to_chat(f"Joined {channel} !")
+
+
+def leave_channel(channel: str):
+  main_window.add_to_chat(f"Leaving {channel}...")
+  _loop.run_until_complete(bot_client_handler.send_message(channel, settings['bot_settings']['part_message']))
+  _loop.run_until_complete(bot_client_handler.part(channel))
+  main_window.remove_tab(channel)
+  main_window.add_to_chat(f"Leaved {channel} !")
+
+
+def send_to_channel(channel: str, message: str):
+  _loop.run_until_complete(bot_client_handler.send_message(channel, message))
+  main_window.add_to_chat(f"[BOT][{channel}]: {message}", channel)
+
+
+def _handle_buffer():
   while bot_client_handler.history_buffer != []:
     if isinstance(bot_client_handler.history_buffer[0], list):
       user, channel, message = bot_client_handler.history_buffer[0]
@@ -51,25 +83,3 @@ def handle_buffer():
       message = bot_client_handler.history_buffer[0]
       if settings['bot_settings']['debug']: main_window.add_to_chat(f"[DEBUG] {message}")
     bot_client_handler.history_buffer.remove(bot_client_handler.history_buffer[0])
-
-
-def join_channel(channel: str, auto=False):
-  channel = str("#"+channel).lower() if channel[0] != "#" else channel.lower()
-  main_window.add_to_chat(f"{'[Auto-Join] ' if auto else ''}Joining {channel}...")
-  loop.run_until_complete(bot_client_handler.send_message(channel, settings['bot_settings']['welcome_message']))
-  loop.run_until_complete(bot_client_handler.join(channel))
-  main_window.add_tab(channel)
-  main_window.add_to_chat(f"Joined {channel} !")
-
-
-def leave_channel(channel: str):
-  main_window.add_to_chat(f"Leaving {channel}...")
-  loop.run_until_complete(bot_client_handler.send_message(channel, settings['bot_settings']['part_message']))
-  loop.run_until_complete(bot_client_handler.part(channel))
-  main_window.remove_tab(channel)
-  main_window.add_to_chat(f"Leaved {channel} !")
-
-
-def send_to_channel(channel: str, message: str):
-  loop.run_until_complete(bot_client_handler.send_message(channel, message))
-  main_window.add_to_chat(f"[BOT][{channel}]: {message}", channel)
