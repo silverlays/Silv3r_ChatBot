@@ -50,8 +50,8 @@ class ClientHandler():
           shared.history_buffer.append([msg.tags['display-name'], user_channel, user_message])
         elif msg.command.split(" ")[0] == "JOIN" or msg.command.split(" ")[0] == "PART" and TRACE_MODE:
           user = msg.raw[1:msg.raw.find("!")]
-          shared.history_buffer.append(f"[TRACE] {user} {msg.command}")
-        elif TRACE_MODE: shared.history_buffer.append(f"[TRACE] {msg.command}")
+          print(f"[TRACE] {user} {msg.command}")
+        elif TRACE_MODE: print(f"[TRACE] {msg.command}")
 
     self.listen_task = self.loop.create_task(_listen())
 
