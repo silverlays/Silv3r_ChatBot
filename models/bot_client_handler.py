@@ -4,17 +4,17 @@ from typing import Union
 
 TRACE_MODE = False  ### FOR DEBUG ###
 
-listen_task: asyncio.Task[type[asyncio.create_task]] = None
-credentials = {
-  "token": str,
-  "nick": str
-}
 _loop = asyncio.new_event_loop()
 _thread = threading.Thread(name="ClientThread", target=_loop.run_forever)
 _thread.daemon = True
 _thread.start()
 _tmi_client = pytmi.TmiClient(ssl=False)
+_listen_task: asyncio.Task[type[asyncio.create_task]] = None
 logged = _tmi_client.logged
+credentials = {
+  "token": str,
+  "nick": str
+}
 history_buffer = [Union[str, list[str, str, str]]]
 
 
@@ -64,5 +64,5 @@ async def _init():
 
 
 def _cancel_listen():
-  try: _loop.call_soon_threadsafe(listen_task.cancel)
+  try: _loop.call_soon_threadsafe(_listen_task.cancel)
   except: pass
