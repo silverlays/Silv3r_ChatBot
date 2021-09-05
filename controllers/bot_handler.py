@@ -64,6 +64,8 @@ def leave_channel(channel: str):
   main_window.add_to_chat(f"Leaving {channel}...")
   _loop.run_until_complete(bot_client_handler.send_message(channel, settings['bot_settings']['part_message']))
   _loop.run_until_complete(bot_client_handler.part(channel))
+  for buffer_message in bot_client_handler.history_buffer:
+    if isinstance(buffer_message, list) and buffer_message[1] == channel: bot_client_handler.history_buffer.remove(buffer_message)
   main_window.remove_tab(channel)
   main_window.add_to_chat(f"Leaved {channel} !")
 
@@ -75,11 +77,13 @@ def send_to_channel(channel: str, message: str):
 
 def _handle_buffer():
   while bot_client_handler.history_buffer != []:
-    if isinstance(bot_client_handler.history_buffer[0], list):
-      user, channel, message = bot_client_handler.history_buffer[0]
-      if message.startswith(settings['bot_settings']['command_prefix']): bot_commands.handle_command(user, channel, message[1:])
-      if settings['bot_settings']['debug']: main_window.add_to_chat(f"[DEBUG] {user}: {message}", channel)
-    elif isinstance(bot_client_handler.history_buffer[0], str):
-      message = bot_client_handler.history_buffer[0]
-      if settings['bot_settings']['debug']: main_window.add_to_chat(f"[DEBUG] {message}")
-    bot_client_handler.history_buffer.remove(bot_client_handler.history_buffer[0])
+    try:
+      if isinstance(bot_client_handler.history_buffer[0], list):
+        user, channel, message = bot_client_handler.history_buffer[0]
+        if message.startswith(settings['bot_settings']['command_prefix']): bot_commands.handle_command(user, channel, message[1:])
+        if settings['bot_settings']['debug']: main_window.add_to_chat(f"[DEBUG] {user}: {message}", channel)
+      elif isinstance(bot_client_handler.history_buffer[0], str):
+        message = bot_client_handler.history_buffer[0]
+        if settings['bot_settings']['debug']: main_window.add_to_chat(f"[DEBUG] {message}")
+      bot_client_handler.history_buffer.remove(bot_client_handler.history_buffer[0])
+    except IndexError: pass

@@ -50,12 +50,13 @@ def add_to_chat(text, channel: str=None):
   try:
     formated_message = "["+(time.strftime('%H:%M:%S', time.localtime()))+"] " if bot_handler.settings['bot_settings']['timestamp'] else ""
     formated_message += f"{text}\r\n"
-    if channel: target_chat: sg.Multiline = main_window.window[channel+'_chat']
+    if channel and get_channels().index(channel): target_chat: sg.Multiline = main_window.window[channel+'_chat']
     else: target_chat: sg.Multiline = main_window.window['status_chat']
     target_chat.update(disabled=False)
     target_chat.update(formated_message, append=True)
     target_chat.update(disabled=True)
   except RuntimeError: pass
+  except ValueError: pass
 
 
 def add_tab(tab_name, update=True):

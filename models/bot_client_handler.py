@@ -53,9 +53,10 @@ async def _init():
       except: break
       msg = pytmi.TmiMessage(raw)
       if msg.command.split(" ")[0] == "PRIVMSG":
+        user_name = str(msg.tags['display-name']).lower()
         user_channel = msg.command[msg.command.find("#"):msg.command.find(" ", msg.command.find("#"))]
         user_message = msg.command[(msg.command.find(":") + 1):]
-        history_buffer.append([msg.tags['display-name'], user_channel, user_message])
+        if user_name != credentials["nick"]: history_buffer.append([msg.tags['display-name'], user_channel, user_message])
       elif msg.command.split(" ")[0] == "JOIN" or msg.command.split(" ")[0] == "PART" and TRACE_MODE:
         user = msg.raw[1:msg.raw.find("!")]
         print(f"[TRACE] {user} {msg.command}")
