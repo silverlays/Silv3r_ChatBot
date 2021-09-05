@@ -15,7 +15,7 @@ credentials = {
   "token": str,
   "nick": str
 }
-history_buffer = [Union[str, list[str, str, str]]]
+history_buffer: list[Union[str, list[str, str, str]]] = []
 
 
 def login():
