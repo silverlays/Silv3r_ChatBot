@@ -19,7 +19,7 @@ history_buffer: list[Union[str, list[str, str, str]]] = []
 
 
 def login():
-  asyncio.run_coroutine_threadsafe(_tmi_client.login_oauth(token=credentials['token'], nick=credentials['nick'], retry=10), _loop)
+  asyncio.run_coroutine_threadsafe(_tmi_client.login_oauth(token=credentials['token'], nick=credentials['nick']), _loop)
   asyncio.run_coroutine_threadsafe(_init(), _loop)
 
 

@@ -1,15 +1,13 @@
 import time
 import PySimpleGUI as sg
-import views.mainwindow as main_window
-import controllers.bot_handler as bot_handler
-
+import dispatcher
 
 window: sg.Window = None
 window_closed = False
 
 
 def show():
-  global window
+  global window, window_closed
   sg.theme("DarkGrey9")
 
   commands_frame_layout = [
@@ -31,27 +29,27 @@ def show():
     event, values = window.read(100)
     #print(event, '//', values)
     if event == sg.WIN_CLOSED:
-      main_window.window_closed = True
+      window_closed = True
       break
     if event == "__TIMEOUT__":
-      if bot_handler.logged: window['connection_status'].update("connected", text_color="green")
+      if dispatcher.logged: window['connection_status'].update("connected", text_color="green")
       else: window['connection_status'].update("disconnected", text_color="red")
     if event == "send_button" and values['input_command'] != "" and get_current_channel() and get_current_channel() != "status":
-      bot_handler.send_to_channel(get_current_channel(), values['input_command'])
+      dispatcher.send_to_channel(get_current_channel(), values['input_command'])
       window['input_command'].update('')
     if event == "join_button":
       channel = sg.popup_get_text("Enter the channel to join:")
-      if channel and channel != "": bot_handler.join_channel(channel)
+      if channel and channel != "": dispatcher.join_channel(channel)
       elif channel == "": sg.popup_error("No channel specified!", no_titlebar=True)
-    if event == "part_button" and get_current_channel() and get_current_channel() != "status": bot_handler.leave_channel(get_current_channel())
+    if event == "part_button" and get_current_channel() and get_current_channel() != "status": dispatcher.leave_channel(get_current_channel())
 
 
 def add_to_chat(text, channel: str=None):
   try:
-    formated_message = "["+(time.strftime('%H:%M:%S', time.localtime()))+"] " if bot_handler.settings['bot_settings']['timestamp'] else ""
+    formated_message = "["+(time.strftime('%H:%M:%S', time.localtime()))+"] " if dispatcher.settings['bot_settings']['timestamp'] else ""
     formated_message += f"{text}\r\n"
-    if channel and get_channels().index(channel): target_chat: sg.Multiline = main_window.window[channel+'_chat']
-    else: target_chat: sg.Multiline = main_window.window['status_chat']
+    if channel and get_channels().index(channel): target_chat: sg.Multiline = window[channel+'_chat']
+    else: target_chat: sg.Multiline = window['status_chat']
     target_chat.update(disabled=False)
     target_chat.update(formated_message, append=True)
     target_chat.update(disabled=True)
