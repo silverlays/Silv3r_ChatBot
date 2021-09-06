@@ -10,7 +10,6 @@ _thread.daemon = True
 _thread.start()
 _tmi_client = pytmi.TmiClient(ssl=False)
 _listen_task: asyncio.Task[type[asyncio.create_task]] = None
-logged = _tmi_client.logged
 credentials = {
   "token": str,
   "nick": str

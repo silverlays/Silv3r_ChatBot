@@ -27,7 +27,14 @@ def execute_thread():
     settings = json.load(file)
   
   mainwindow.add_to_chat("Awaiting connection...")
-  while not logged: _login()
+  tmi_handler.login()
+  for _ in range(100):
+    if tmi_handler._tmi_client.logged:
+      logged = True
+      break
+    else: time.sleep(0.1)
+  if not logged:
+    raise ConnectionError("Cannot connect! Try to restart the bot.")
   mainwindow.add_to_chat("Connected !")
 
   for channel in settings['bot_settings']['auto_join']:
@@ -81,13 +88,3 @@ def _handle_buffer():
         if settings['bot_settings']['debug']: mainwindow.add_to_chat(f"[DEBUG] {message}")
       tmi_handler.history_buffer.remove(tmi_handler.history_buffer[0])
     except IndexError: pass
-
-def _login(timeout=3):
-  global logged
-  tmi_handler.login()
-  for _ in range(timeout*10):
-    if tmi_handler._tmi_client.logged:
-      logged = True
-      return
-    else: time.sleep(0.1)
-  #if not tmi_handler._tmi_client.logged: raise ConnectionError("Cannot connect! Try to restart the bot.")
