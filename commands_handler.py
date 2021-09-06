@@ -1,11 +1,9 @@
 ### MUST BE CORELATION WITH SETTINGS.JSON
 ### COMMANDS FUNCTIONS ARE IN BOTTOM OF THIS FILE ###
 
-import asyncio
 import internals.dispatcher as dispatcher
 
 ### PRIVATE VARIABLES (DO NOT EDIT !) ###
-#_loop = asyncio.new_event_loop()
 settings_commands = {}
 settings_keywords = {}
 _user, _channel, _command_args = ("", "", "")
