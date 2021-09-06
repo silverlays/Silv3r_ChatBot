@@ -1,6 +1,6 @@
 import time
 import PySimpleGUI as sg
-import dispatcher
+import internals.dispatcher as dispatcher
 
 window: sg.Window = None
 window_closed = False

@@ -1,6 +1,6 @@
 import threading, os, json
-import dispatcher
-import tmi_handler
+import internals.dispatcher as dispatcher
+import internals.tmi_handler as tmi_handler
 import mainwindow
 
 

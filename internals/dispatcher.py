@@ -1,7 +1,7 @@
 import asyncio, os, json, time
 import mainwindow
 import commands_handler
-import tmi_handler
+import internals.tmi_handler as tmi_handler
 
 
 logged = False

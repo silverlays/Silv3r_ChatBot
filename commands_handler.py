@@ -2,7 +2,7 @@
 ### COMMANDS FUNCTIONS ARE IN BOTTOM OF THIS FILE ###
 
 import asyncio
-import dispatcher
+import internals.dispatcher as dispatcher
 
 ### PRIVATE VARIABLES (DO NOT EDIT !) ###
 #_loop = asyncio.new_event_loop()
